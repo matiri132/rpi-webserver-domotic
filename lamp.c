@@ -11,6 +11,9 @@
 FILE *fp;
 char estado_actual[4];
 
+void status();
+void lamp();
+
 int main(int argc, char **argv){
 
 	
@@ -23,14 +26,38 @@ int main(int argc, char **argv){
 		}
 		
 		if(strcmp(argv[1], "status") == 0){
-			while (feof(fp) == 0){
+			status();
+		}else if(strcmp(argv[1], "lamp") == 0){
+			fgets(estado_actual, 4 , fp);
+			lamp();
+			}else{
+				printf("Valor de lampara invalido\n");
+			}
+			printf("Actualizado estado de las lamparas \n");
+			status();
+			fputs(estado_actual , fp);
+		}else{
+			printf("%s : No es un comando valido \n" , argv[1]);
+		}
+	}else{
+		printf("Debe ingresar parametros\n");
+	}
+
+	fclose ( fp );
+	return 0;
+    
+}
+
+void status(){
+	while (feof(fp) == 0){
  				fgets(estado_actual,4,fp);
  				printf("Estado actual:  (0: Apagado , 1: Encendido)\n");
  				printf("L0: %c - L1: %c - L2: %c \n",estado_actual[0] , estado_actual[1] , estado_actual[2]);
- 	    		}
-		}else if(strcmp(argv[1], "lamp") == 0){
-			fgets(estado_actual, 4 , fp);
-			if(strcmp(argv[2], "L0") == 0){
+ 	}
+}
+
+void lamp(){
+	if(strcmp(argv[2], "L0") == 0){
 			     if(strcmp(argv[3], "0")== 0){
 			     	estado_actual[0] = '0';
 			     }else if(strcmp(argv[3], "1")== 0){
@@ -54,19 +81,4 @@ int main(int argc, char **argv){
 			     }else{
 			     	printf("Valor erroneo\n");
 			     }
-			}else{
-				printf("Valor de lampara invalido\n");
-			}
-			printf("Actualizado estado de las lamparas %s \n", estado_actual);
-			fputs(estado_actual , fp);
-		}else{
-			printf("%s : No es un comando valido \n" , argv[1]);
-		}
-	}else{
-		printf("Debe ingresar parametros\n");
-	}
-
-	fclose ( fp );
-	return 0;
-    
 }
