@@ -12,10 +12,13 @@ MODULE_LICENSE("GPL");
 #define A2  27 // 1
 #define A3  22 // 2
 
-void lamp_gpio_init();
-void lamp_gpio_exit()
-int proc_init();
-int proc_exit();
+void lamp_gpio_init(void);
+void lamp_gpio_exit(void)
+int proc_init(void);
+int proc_exit(void);
+ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long len, void *data );
+int lampctrl_read(char *page, char **start, off_t off, int count, int *eof, void *data);
+ 
 
 static struct proc_dir_entry *proc_entry;
 static char *user_set;
@@ -71,7 +74,7 @@ void lamp_gpio_exit(void){
 
 //PROC
 
-int init_proc(){
+int init_proc(void){
 
   int ret = 0;
   user_set = (char*)vmalloc(PAGE_SIZE);
@@ -85,8 +88,8 @@ int init_proc(){
       vfree(user_set);
       printk(KERN_INFO "lampctrl: Couldn't create proc entry\n");
     }else{
-      proc_entry->read_proc = lamp_read;
-      proc_entry->write_proc = lamp_write;
+      proc_entry->read_proc = lampctrl_read;
+      proc_entry->write_proc = lampctrl_write;
       proc_entry->owner = THIS_MODULE;
  
     }
@@ -120,7 +123,7 @@ ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned lon
  
 }
 
-int fortune_read( char *page, char **start, off_t off, int count, int *eof, void *data ){
+int lampctrl_read( char *page, char **start, off_t off, int count, int *eof, void *data ){
  
   int len;
   if (off > 0) {
