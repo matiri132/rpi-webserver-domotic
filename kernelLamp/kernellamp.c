@@ -5,7 +5,7 @@
 #include <linux/string.h>
 #include <linux/vmalloc.h>
 #include <asm/uaccess.h>
-#include <linux/uaccess.j>
+#include <linux/uaccess.h>
 #include <linux/gpio.h>
 
 MODULE_LICENSE("GPL");
@@ -13,14 +13,6 @@ MODULE_LICENSE("GPL");
 #define A1  17// 0
 #define A2  27 // 1
 #define A3  22 // 2
-
-void lamp_gpio_init(void);
-void lamp_gpio_exit(void);
-int proc_init(void);
-void proc_exit(void);
-ssize_t lampctrl_write(struct file *file, char __user *ubuf, size_t count, loff_t *ppos);
-ssize_t lampctrl_read(struct file *file, char __user *ubuf,size_t count, loff_t *ppos);
-
 
 static char *user_set;
 static char *status;
@@ -53,9 +45,6 @@ void lamp_gpio_exit(void){
 //PROC
 ssize_t lampctrl_write( struct file *filp, char __user *buff, unsigned long count, void *ppos ){
   
-  if(*ppos > 0 || count > strlen(status)){
-    return -EFAULT;
-  }
   if (copy_from_user( &user_set, buff, count )) {
     return -EFAULT;
   }
@@ -92,16 +81,15 @@ struct file_operations fops = {
     .write = lampctrl_write, //write()
 };
 
-int init_proc(void){
+int proc_init(void){
 
   int ret = 0;
-  user_set = (char*)vmalloc(PAGE_SIZE);
+  user_set = (char*)vmalloc(12);
 
   if(!user_set){
     ret = -ENOMEM;
   }else{
-    memset(user_set , 0 , PAGE_SIZE);
-    proc_entry = proc_create("lampctrl", 0644 , NULL, &ops);
+    proc_entry = proc_create("lampctrl", 0644 , NULL, &fops);
     if(proc_entry == NULL){
       vfree(user_set);
       printk(KERN_INFO "lampctrl: Couldn't create proc entry\n");
