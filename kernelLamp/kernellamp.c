@@ -5,6 +5,7 @@
 #include <linux/string.h>
 #include <linux/vmalloc.h>
 #include <asm/uaccess.h>
+#include <linux/gpio.h>
 
 MODULE_LICENSE("GPL");
 
@@ -13,26 +14,32 @@ MODULE_LICENSE("GPL");
 #define A3  22 // 2
 
 void lamp_gpio_init(void);
-void lamp_gpio_exit(void)
+void lamp_gpio_exit(void);
 int proc_init(void);
 int proc_exit(void);
 ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long len, void *data );
 int lampctrl_read(char *page, char **start, off_t off, int count, int *eof, void *data);
  
+struct file_operations fops = {
+    .read = lampctrl_read,    //read()
+    .write = lampctrl_write, //write()
+};
 
 static struct proc_dir_entry *proc_entry;
 static char *user_set;
 static char *status;
-static int[3] lamps = [A1 , A2 , A3];
+static int lamps[] = {A1 , A2 , A3};
+static int i = 0;
 
 // MODULE
 static int __init lamp_init(void){
 
   printk(KERN_INFO "LAMP: staring...");
 
-  for(int i = 0 ; i < 3 ; i++){
+  for(i ; i < 3 ; i++){
     status[i] = '0';  
   }
+  i = 0;
   
   lamp_gpio_init();
   proc_init();
@@ -83,15 +90,12 @@ int init_proc(void){
     ret = -ENOMEM;
   }else{
     memset(user_set , 0 , PAGE_SIZE);
-    proc_entry = create_proc_entry("lampctrl", 0644 , NULL);
+    proc_entry = proc_create("lampctrl", 0644 , NULL, &ops);
     if(proc_entry == NULL){
       vfree(user_set);
       printk(KERN_INFO "lampctrl: Couldn't create proc entry\n");
-    }else{
-      proc_entry->read_proc = lampctrl_read;
-      proc_entry->write_proc = lampctrl_write;
-      proc_entry->owner = THIS_MODULE;
- 
+    }
+
     }
   }
   return ret;
@@ -99,14 +103,17 @@ int init_proc(void){
 
 void proc_exit( void ){
  
-  remove_proc_entry("lampctrl", &proc_root);
+  proc_remove(proc_entry);
   vfree(user_set);
  
 }
 
-ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long len, void *data ){
- 
-  if (copy_from_user( &user_set, buff, len )) {
+ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long count, void *data ){
+  
+  if(*ppos > 0 || count > strlen(status)){
+    return -EFAULT;
+  }
+  if (copy_from_user( &user_set, buff, count )) {
     return -EFAULT;
   }
   
@@ -123,16 +130,15 @@ ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned lon
  
 }
 
-int lampctrl_read( char *page, char **start, off_t off, int count, int *eof, void *data ){
- 
-  int len;
-  if (off > 0) {
-    *eof = 1;
-    return 0;
-  }
-   
-  len = sprintf(page, "%s\n", &user_set);
-  return len;
+int lampctrl_read( struct file *filep, char __user *buffer, size_t count, loff_t *ppos ){
+  int error_count = 0;
+  if(copy_to_user(buffer, status, strlen(status))){
+    printk(KERN_INFO "lampctrl: fallo al enviar status\n");
+    return -EFAULT;
+  }else {  
+      printk(KERN_INFO "lampctrl: Se ha enviado estado actual al usuario : %s\n", status);
+      return (strlen(status));
+   }
  
 }
 
