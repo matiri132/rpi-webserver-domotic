@@ -24,39 +24,45 @@ int main(int argc, char **argv){
 		
 		if(strcmp(argv[1], "status") == 0){
 			status();
-			}else if(strcmp(argv[1], "lamp") == 0){
-				fgets(estado_actual, 4 , fp);
-				if(strcmp(argv[2], "L0") == 0){
-			     if(strcmp(argv[3], "0")== 0){
-			     	estado_actual[0] = '0';
-			     }else if(strcmp(argv[3], "1")== 0){
-			     	estado_actual[0] = '1';
-			     }else{
-			     	printf("Valor erroneo\n");
-			     }
+		}else if(strcmp(argv[1], "lamp") == 0){
+			fgets(estado_actual, 4 , fp);
+			if(strcmp(argv[2], "L0") == 0){
+		     	if(strcmp(argv[3], "0")== 0){
+		     		estado_actual[0] = '0';
+		     	}else if(strcmp(argv[3], "1")== 0){
+		     		estado_actual[0] = '1';
+		     	}else{
+		     		printf("Valor erroneo\n");
+		     	}
 			}else if(strcmp(argv[2], "L1")== 0){
-			     if(strcmp(argv[3], "0")==0){
-			     	estado_actual[1] = '0';
-			     }else if(strcmp(argv[3], "1")==0){
-			     	estado_actual[1] = '1';
-			     }else{
-			     	printf("Valor erroneo\n");
-			     }
+		    	if(strcmp(argv[3], "0")==0){
+		     		estado_actual[1] = '0';
+		     	}else if(strcmp(argv[3], "1")==0){
+		     		estado_actual[1] = '1';
+		     	}else{
+		     		printf("Valor erroneo\n");
+		     	}
 			}else if(strcmp(argv[2], "L2")==0){
-			     if(strcmp(argv[3], "0")==0){
-			     	estado_actual[2] = '0';
-			     }else if(strcmp(argv[3], "1")==0){
-			     	estado_actual[2] = '1';
-			     }else{
-			     	printf("Valor erroneo\n");
-			     }
-			}else{
-				printf("Valor de lampara invalido\n");
-			}
+		    	if(strcmp(argv[3], "0")==0){
+		     		estado_actual[2] = '0';
+		     	}else if(strcmp(argv[3], "1")==0){
+		     		estado_actual[2] = '1';
+		     	}else{
+		     		printf("Valor erroneo\n");
+		     	}
+
+		    }else{
+		    	printf("Valor de lampara incorrecto\n", );
+		    	fclose ( fp );
+				return 0;
+		    }
+
 			printf("Actualizado estado de las lamparas \n");
 			status();
-			fputs(estado_actual , fp);
-			}else{
+			int ret = fputs(estado_actual , fp);
+			printf("Success: %d\n", ret );
+			}
+		}else{
 			printf("%s : No es un comando valido \n" , argv[1]);
 		}
 	}else{
