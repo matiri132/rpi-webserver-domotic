@@ -5,6 +5,7 @@
 #include <linux/string.h>
 #include <linux/vmalloc.h>
 #include <asm/uaccess.h>
+#include <linux/uaccess.j>
 #include <linux/gpio.h>
 
 MODULE_LICENSE("GPL");
@@ -16,15 +17,14 @@ MODULE_LICENSE("GPL");
 void lamp_gpio_init(void);
 void lamp_gpio_exit(void);
 int proc_init(void);
-int proc_exit(void);
-ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long len, void *data );
-int lampctrl_read(char *page, char **start, off_t off, int count, int *eof, void *data);
+void proc_exit(void);
+ssize_t lampctrl_write(struct file *file, char __user *ubuf, size_t count, loff_t *ppos);
+ssize_t lampctrl_read(struct file *file, char __user *ubuf,size_t count, loff_t *ppos);
 
 
 static char *user_set;
 static char *status;
 static int lamps[] = {A1 , A2 , A3};
-static int i = 0;
 
 static struct proc_dir_entry *proc_entry;
 
@@ -51,7 +51,7 @@ void lamp_gpio_exit(void){
 }
 
 //PROC
-ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long count, void *data ){
+ssize_t lampctrl_write( struct file *filp, char __user *buff, unsigned long count, void *ppos ){
   
   if(*ppos > 0 || count > strlen(status)){
     return -EFAULT;
@@ -59,22 +59,23 @@ ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned lon
   if (copy_from_user( &user_set, buff, count )) {
     return -EFAULT;
   }
-  
-  for(int i = 0 ; i < 3 ; i++){
+  int i = 0;
+  while(i < 3){
     if(user_set[i]=='0'){
       gpio_set_value(lamps[i], 0);
     }else{
       gpio_set_value(lamps[i], 1);
     }
+    status[i] = user_set[i];
+    i++;
   }
-
-  status = user_set;
-  return len;
+  
+  return strlen(status);
  
 }
 
-int lampctrl_read( struct file *filep, char __user *buffer, size_t count, loff_t *ppos ){
-  int error_count = 0;
+ssize_t lampctrl_read( struct file *filep, char __user *buffer, size_t count, loff_t *ppos ){
+ 
   if(copy_to_user(buffer, status, strlen(status))){
     printk(KERN_INFO "lampctrl: fallo al enviar status\n");
     return -EFAULT;
@@ -104,8 +105,6 @@ int init_proc(void){
     if(proc_entry == NULL){
       vfree(user_set);
       printk(KERN_INFO "lampctrl: Couldn't create proc entry\n");
-    }
-
     }
   }
   return ret;
