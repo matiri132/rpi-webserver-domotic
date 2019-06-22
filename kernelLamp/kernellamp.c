@@ -1,11 +1,10 @@
 #include <linux/init.h>
 #include <linux/module.h>
-#include <linux/kthread.h>
-#include <linux/delay.h>
-#include <linux/gpio.h>
-
-/* Definicion de cantidad de pines a controlar */
-#define NPINS 1
+#include <linux/kernel.h>
+#include <linux/proc_fs.h>
+#include <linux/string.h>
+#include <linux/vmalloc.h>
+#include <asm/uaccess.h>
 
 MODULE_LICENSE("GPL");
 
@@ -15,15 +14,25 @@ MODULE_LICENSE("GPL");
 
 void lamp_gpio_init();
 void lamp_gpio_exit()
+int proc_init();
+int proc_exit();
 
+static struct proc_dir_entry *proc_entry;
+static char *user_set;
+static char *status;
+static int[3] lamps = [A1 , A2 , A3];
 
 // MODULE
 static int __init lamp_init(void){
 
   printk(KERN_INFO "LAMP: staring...");
 
+  for(int i = 0 ; i < 3 ; i++){
+    status[i] = '0';  
+  }
+  
   lamp_gpio_init();
-  gpio_set_value(A1 , 0);	
+  proc_init();
 
   printk(KERN_INFO "LAMP: staring done.");
 
@@ -31,14 +40,14 @@ static int __init lamp_init(void){
 }
 static void __exit lamp_exit(void){
   printk(KERN_INFO "LAMP: stopping...");
-  gpio_set_value(A1 , 1);
+
+  proc_exit();
   lamp_gpio_exit();	
+
   printk(KERN_INFO "LAMP: stopping done.");
 }
 
 //GPIO
-
-
 void lamp_gpio_init(void){
   printk(KERN_INFO "LAMP: starting gpio...");
 
@@ -60,6 +69,69 @@ void lamp_gpio_exit(void){
 
 }
 
+//PROC
+
+int init_proc(){
+
+  int ret = 0;
+  user_set = (char*)vmalloc(PAGE_SIZE);
+
+  if(!user_set){
+    ret = -ENOMEM;
+  }else{
+    memset(user_set , 0 , PAGE_SIZE);
+    proc_entry = create_proc_entry("lampctrl", 0644 , NULL);
+    if(proc_entry == NULL){
+      vfree(user_set);
+      printk(KERN_INFO "lampctrl: Couldn't create proc entry\n");
+    }else{
+      proc_entry->read_proc = lamp_read;
+      proc_entry->write_proc = lamp_write;
+      proc_entry->owner = THIS_MODULE;
+ 
+    }
+  }
+  return ret;
+}
+
+void proc_exit( void ){
+ 
+  remove_proc_entry("lampctrl", &proc_root);
+  vfree(user_set);
+ 
+}
+
+ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long len, void *data ){
+ 
+  if (copy_from_user( &user_set, buff, len )) {
+    return -EFAULT;
+  }
+  
+  for(int i = 0 ; i < 3 ; i++){
+    if(user_set[i]=='0'){
+      gpio_set_value(lamps[i], 0);
+    }else{
+      gpio_set_value(lamps[i], 1);
+    }
+  }
+
+  status = user_set;
+  return len;
+ 
+}
+
+int fortune_read( char *page, char **start, off_t off, int count, int *eof, void *data ){
+ 
+  int len;
+  if (off > 0) {
+    *eof = 1;
+    return 0;
+  }
+   
+  len = sprintf(page, "%s\n", &user_set);
+  return len;
+ 
+}
 
 
 //MODULE INSTALL
