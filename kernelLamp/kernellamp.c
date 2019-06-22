@@ -1,9 +1,10 @@
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/proc_fs.h>
 #include <linux/string.h>
-#include <linux/vmalloc.h>
+#include <linux/slab.h>
 #include <asm/uaccess.h>
 #include <linux/uaccess.h>
 #include <linux/gpio.h>
@@ -14,15 +15,100 @@ MODULE_LICENSE("GPL");
 #define A2  27 // 1
 #define A3  22 // 2
 
-static char *user_set;
-static char *status;
-static int lamps[] = {A1 , A2 , A3};
+//static char *user_set;
 
-static struct proc_dir_entry *proc_entry;
+static char status[3] = {'0' , '0' , '0'};
+static int lamps[] = {A1 , A2 , A3};
+static int read_p;
+static int counter = 0;
+static int LAMPNUM = 3;
+
+//PROC
+static int proc_open(struct inode *sp_inode, struct file *file) {
+	read_p = 1;
+	printk("proc called open\n");
+	return 0;
+}
+
+static int proc_release(struct inode *sp_inode,struct file *sp_file) {
+	printk("proc called release\n");
+	return 0;
+}
+
+static size_t lampctrl_write( struct file *file, char __user *buff, size_t count, loff_t *ppos ){
+
+  printk("proc call write\n");
+
+  if(count > LAMPNUM+1){	
+      printk("Error en el valor de seteo");
+      return -EFAULT;
+  }
+
+  counter = 0;
+  while(counter < LAMPNUM){
+    if(buff[counter]=='0'){
+      printk("Apaga lampara: %d" , lamps[counter]);
+      gpio_set_value(lamps[counter], 1);
+    }else{
+      printk("Enciende lampara: %d" , lamps[counter]);
+      gpio_set_value(lamps[counter], 0);
+    }
+      status[counter] = buff[counter];
+      counter++;
+   }
+  return count;
+
+}
+
+static ssize_t lampctrl_read( struct file *file, char __user *buffer, size_t count, loff_t *ppos ){
+
+  printk("proc Called read\n");
+  read_p = !read_p;
+  if(read_p){
+	return 0;
+  }
+  if(copy_to_user(buffer, status, strlen(status))){
+    printk("lampctrl: fallo al enviar status\n");
+    return -EFAULT;
+  }else {
+      printk("lampctrl: Se ha enviado estado actual al usuario : %s\n", status);
+      *ppos = 0;
+      return strlen(status);
+   }
+  
+
+}
+
+static struct file_operations fops = {
+    .open = proc_open,
+    .read = lampctrl_read,
+    .write = lampctrl_write,
+    .release =proc_release,
+    .owner = THIS_MODULE,
+};
+
+static int proc_init(void){
+
+  printk("LAMP: proc starting...");
+
+  if(!proc_create("lampctrl", 0644 , NULL, &fops)){
+      printk("lampctrl: Couldn't create proc entry\n");
+      remove_proc_entry("lampctrl",NULL);
+      return -ENOMEM;
+  }
+  printk("LAMP: proc succes...");
+  return 0;
+}
+
+static void proc_exit( void ){
+  remove_proc_entry("lampctrl" , NULL);
+  printk("Removing proc");
+}
+
 
 //GPIO
-void lamp_gpio_init(void){
-  printk(KERN_INFO "LAMP: starting gpio...");
+static void lamp_gpio_init(void){
+  printk( "LAMP: starting gpio...");
 
   gpio_request(A1, "A1");
   gpio_request(A2, "A2");
@@ -32,87 +118,24 @@ void lamp_gpio_init(void){
   gpio_direction_output(A2, 1);
   gpio_direction_output(A3, 1);
 
-  printk(KERN_INFO "PIX: starting gpio done.");
+  printk("LAMP: starting gpio done.");
 }
 
-void lamp_gpio_exit(void){
+static void lamp_gpio_exit(void){
+  
+ 
   gpio_free(A1);
   gpio_free(A2);
-  gpio_free(A3);   
+  gpio_free(A3);
 
-}
-
-//PROC
-ssize_t lampctrl_write( struct file *filp, char __user *buff, unsigned long count, void *ppos ){
-  
-  if (copy_from_user( &user_set, buff, count )) {
-    return -EFAULT;
-  }
-  int i = 0;
-  while(i < 3){
-    if(user_set[i]=='0'){
-      gpio_set_value(lamps[i], 0);
-    }else{
-      gpio_set_value(lamps[i], 1);
-    }
-    status[i] = user_set[i];
-    i++;
-  }
-  
-  return strlen(status);
- 
-}
-
-ssize_t lampctrl_read( struct file *filep, char __user *buffer, size_t count, loff_t *ppos ){
- 
-  if(copy_to_user(buffer, status, strlen(status))){
-    printk(KERN_INFO "lampctrl: fallo al enviar status\n");
-    return -EFAULT;
-  }else {  
-      printk(KERN_INFO "lampctrl: Se ha enviado estado actual al usuario : %s\n", status);
-      return (strlen(status));
-   }
- 
-}
-
-struct file_operations fops = {
-    .owner = THIS_MODULE,
-    .read = lampctrl_read,    //read()
-    .write = lampctrl_write, //write()
-};
-
-int proc_init(void){
-
-  int ret = 0;
-  user_set = (char*)vmalloc(12);
-
-  if(!user_set){
-    ret = -ENOMEM;
-  }else{
-    proc_entry = proc_create("lampctrl", 0644 , NULL, &fops);
-    if(proc_entry == NULL){
-      vfree(user_set);
-      printk(KERN_INFO "lampctrl: Couldn't create proc entry\n");
-    }
-  }
-  return ret;
-}
-
-void proc_exit( void ){
- 
-  proc_remove(proc_entry);
-  vfree(user_set);
- 
 }
 
 
 // MODULE
 static int __init lamp_init(void){
 
-  printk(KERN_INFO "LAMP: staring...");
+  printk(KERN_INFO "LAMP: starting...");
 
-  status[0] = '0' ; status[1] = '0' ; status[2] = '0';
-  
   lamp_gpio_init();
   proc_init();
 
@@ -120,11 +143,12 @@ static int __init lamp_init(void){
 
   return 0;
 }
+
 static void __exit lamp_exit(void){
   printk(KERN_INFO "LAMP: stopping...");
 
   proc_exit();
-  lamp_gpio_exit();	
+  lamp_gpio_exit();
 
   printk(KERN_INFO "LAMP: stopping done.");
 }
