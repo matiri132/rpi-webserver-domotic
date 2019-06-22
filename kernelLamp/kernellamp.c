@@ -19,43 +19,14 @@ int proc_init(void);
 int proc_exit(void);
 ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long len, void *data );
 int lampctrl_read(char *page, char **start, off_t off, int count, int *eof, void *data);
- 
-struct file_operations fops = {
-    .read = lampctrl_read,    //read()
-    .write = lampctrl_write, //write()
-};
 
-static struct proc_dir_entry *proc_entry;
+
 static char *user_set;
 static char *status;
 static int lamps[] = {A1 , A2 , A3};
 static int i = 0;
 
-// MODULE
-static int __init lamp_init(void){
-
-  printk(KERN_INFO "LAMP: staring...");
-
-  for(i ; i < 3 ; i++){
-    status[i] = '0';  
-  }
-  i = 0;
-  
-  lamp_gpio_init();
-  proc_init();
-
-  printk(KERN_INFO "LAMP: staring done.");
-
-  return 0;
-}
-static void __exit lamp_exit(void){
-  printk(KERN_INFO "LAMP: stopping...");
-
-  proc_exit();
-  lamp_gpio_exit();	
-
-  printk(KERN_INFO "LAMP: stopping done.");
-}
+static struct proc_dir_entry *proc_entry;
 
 //GPIO
 void lamp_gpio_init(void){
@@ -80,34 +51,6 @@ void lamp_gpio_exit(void){
 }
 
 //PROC
-
-int init_proc(void){
-
-  int ret = 0;
-  user_set = (char*)vmalloc(PAGE_SIZE);
-
-  if(!user_set){
-    ret = -ENOMEM;
-  }else{
-    memset(user_set , 0 , PAGE_SIZE);
-    proc_entry = proc_create("lampctrl", 0644 , NULL, &ops);
-    if(proc_entry == NULL){
-      vfree(user_set);
-      printk(KERN_INFO "lampctrl: Couldn't create proc entry\n");
-    }
-
-    }
-  }
-  return ret;
-}
-
-void proc_exit( void ){
- 
-  proc_remove(proc_entry);
-  vfree(user_set);
- 
-}
-
 ssize_t lampctrl_write( struct file *filp, const char __user *buff, unsigned long count, void *data ){
   
   if(*ppos > 0 || count > strlen(status)){
@@ -140,6 +83,63 @@ int lampctrl_read( struct file *filep, char __user *buffer, size_t count, loff_t
       return (strlen(status));
    }
  
+}
+
+struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .read = lampctrl_read,    //read()
+    .write = lampctrl_write, //write()
+};
+
+int init_proc(void){
+
+  int ret = 0;
+  user_set = (char*)vmalloc(PAGE_SIZE);
+
+  if(!user_set){
+    ret = -ENOMEM;
+  }else{
+    memset(user_set , 0 , PAGE_SIZE);
+    proc_entry = proc_create("lampctrl", 0644 , NULL, &ops);
+    if(proc_entry == NULL){
+      vfree(user_set);
+      printk(KERN_INFO "lampctrl: Couldn't create proc entry\n");
+    }
+
+    }
+  }
+  return ret;
+}
+
+void proc_exit( void ){
+ 
+  proc_remove(proc_entry);
+  vfree(user_set);
+ 
+}
+
+
+// MODULE
+static int __init lamp_init(void){
+
+  printk(KERN_INFO "LAMP: staring...");
+
+  status[0] = '0' ; status[1] = '0' ; status[2] = '0';
+  
+  lamp_gpio_init();
+  proc_init();
+
+  printk(KERN_INFO "LAMP: staring done.");
+
+  return 0;
+}
+static void __exit lamp_exit(void){
+  printk(KERN_INFO "LAMP: stopping...");
+
+  proc_exit();
+  lamp_gpio_exit();	
+
+  printk(KERN_INFO "LAMP: stopping done.");
 }
 
 
