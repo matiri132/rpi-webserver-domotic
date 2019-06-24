@@ -11,17 +11,18 @@
 
 MODULE_LICENSE("GPL");
 
-#define A1  17// 0
-#define A2  27 // 1
-#define A3  22 // 2
+#define A1  17// Pin 11
+#define A2  27 // Pin 13
+#define A3  22 // Pin 15
+#define A4  23 // Pin 16
 
 //static char *user_set;
 
-static char status[3] = {'0' , '0' , '0'};
-static int lamps[] = {A1 , A2 , A3};
+static char status[4] = {'0' , '0' , '0' , '0'};
+static int lamps[] = {A1 , A2 , A3 , A4};
 static int read_p;
 static int counter = 0;
-static int LAMPNUM = 3;
+static int LAMPNUM = 4;
 
 //PROC
 static int proc_open(struct inode *sp_inode, struct file *file) {
@@ -67,7 +68,7 @@ static ssize_t lampctrl_read( struct file *file, char __user *buffer, size_t cou
   if(read_p){
 	return 0;
   }
-  if(copy_to_user(buffer, status, strlen(status))){
+  if(copy_to_user(buffer, status, LAMPNUM)){
     printk("lampctrl: fallo al enviar status\n");
     return -EFAULT;
   }else {
@@ -113,11 +114,12 @@ static void lamp_gpio_init(void){
   gpio_request(A1, "A1");
   gpio_request(A2, "A2");
   gpio_request(A3, "A3");
+  gpio_request(A4, "A4");
 
   gpio_direction_output(A1, 1);
   gpio_direction_output(A2, 1);
   gpio_direction_output(A3, 1);
-
+  gpio_direction_output(A4, 1);
   printk("LAMP: starting gpio done.");
 }
 
@@ -127,6 +129,7 @@ static void lamp_gpio_exit(void){
   gpio_free(A1);
   gpio_free(A2);
   gpio_free(A3);
+  gpio_free(A4);
 
 }
 

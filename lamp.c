@@ -4,20 +4,20 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <errno.h>
-#include <wait.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 
-FILE *fp;
-char estado_actual[4];
 
+char estado_actual[4];
+int fp;
 void status();
 
 int main(int argc, char **argv){
 
 	if(argv[1] != NULL){
-		fp = fopen ( "/proc/lampctrl", "rw" );        
-		if (fp==NULL) {
+		fp = open ( "/proc/lampctrl", O_RDWR );        
+		if (fp<0) {
 			fputs ("File error\n",stderr);
 			return 0;
 		}
@@ -25,7 +25,7 @@ int main(int argc, char **argv){
 		if(strcmp(argv[1], "status") == 0){
 			status();
 		}else if(strcmp(argv[1], "lamp") == 0){
-			fgets(estado_actual, 4 , fp);
+			read(fp ,estado_actual, 4);
 			if(strcmp(argv[2], "L0") == 0){
 		     	if(strcmp(argv[3], "0")== 0){
 		     		estado_actual[0] = '0';
@@ -52,30 +52,26 @@ int main(int argc, char **argv){
 		     	}
 
 		    }else{
-		    	printf("Valor de lampara incorrecto\n", );
-		    	fclose ( fp );
-				return 0;
+		    	printf("Valor de lampara incorrecto\n");
+			return 0;
 		    }
 
 			printf("Actualizado estado de las lamparas \n");
 			status();
-			int ret = fputs(estado_actual , fp);
-			printf("Success: %d\n", ret );
-			}
-		}else{
+			write(fp, estado_actual , 4);
+			
+			}else{
 			printf("%s : No es un comando valido \n" , argv[1]);
-		}
+			}
 	}else{
 		printf("Debe ingresar parametros\n");
 	}
-	fclose ( fp );
+//	fclose ( fp );
 	return 0;
 }
 
 void status(){
-	while (feof(fp) == 0){
- 				fgets(estado_actual,4,fp);
- 				printf("Estado actual:  (0: Apagado , 1: Encendido)\n");
- 				printf("L0: %c - L1: %c - L2: %c \n",estado_actual[0] , estado_actual[1] , estado_actual[2]);
- 	}
-}
+	read(fp, estado_actual,4);
+ 	printf("Estado actual:  (0: Apagado , 1: Encendido)\n");
+ 	printf("L0: %c - L1: %c - L2: %c \n",estado_actual[0] , estado_actual[1] , estado_actual[2]);
+ }
