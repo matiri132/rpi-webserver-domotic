@@ -1,0 +1,7 @@
+Instalar apache + python + MySQL 
+
+Copiar carpeta lampctrlsv en  /var/www/
+
+Modificar archivo de configuracion de apache:
+
+/etc/apache2/default-server.conf

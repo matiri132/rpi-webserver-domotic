@@ -1,0 +1,86 @@
+[Mon Jun 24 21:21:39.229108 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506] Content-Type: text/html
+[Mon Jun 24 21:21:39.230191 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506] ()
+[Mon Jun 24 21:21:39.230586 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506] mod_wsgi (pid=3280): Exception occurred processing WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 21:21:39.230794 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506] Traceback (most recent call last):
+[Mon Jun 24 21:21:39.230997 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506]   File "/var/www/lampctrlsv/pythonctrl/controller.py", line 10, in application
+[Mon Jun 24 21:21:39.231547 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506]     output = l.status()
+[Mon Jun 24 21:21:39.231690 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 7, in status
+[Mon Jun 24 21:21:39.232100 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506]     output = textolamp(contenido)
+[Mon Jun 24 21:21:39.232218 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 20, in textolamp
+[Mon Jun 24 21:21:39.232421 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506]     out += "Lampara L" + i + ": Apagada\\n"
+[Mon Jun 24 21:21:39.232597 2019] [wsgi:error] [pid 3280] [client 10.42.0.1:60506] TypeError: cannot concatenate 'str' and 'int' objects
+[Mon Jun 24 21:21:43.988023 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508] Content-Type: text/html
+[Mon Jun 24 21:21:43.988644 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508] ()
+[Mon Jun 24 21:21:43.989022 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508] mod_wsgi (pid=3278): Exception occurred processing WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 21:21:43.989224 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508] Traceback (most recent call last):
+[Mon Jun 24 21:21:43.989648 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508]   File "/var/www/lampctrlsv/pythonctrl/controller.py", line 10, in application
+[Mon Jun 24 21:21:43.990407 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508]     output = l.status()
+[Mon Jun 24 21:21:43.990600 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 7, in status
+[Mon Jun 24 21:21:43.991099 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508]     output = textolamp(contenido)
+[Mon Jun 24 21:21:43.991250 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 20, in textolamp
+[Mon Jun 24 21:21:43.991482 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508]     out += "Lampara L" + i + ": Apagada\\n"
+[Mon Jun 24 21:21:43.991680 2019] [wsgi:error] [pid 3278] [client 10.42.0.1:60508] TypeError: cannot concatenate 'str' and 'int' objects
+[Mon Jun 24 21:33:30.818546 2019] [wsgi:error] [pid 3461] [client 10.42.0.1:33752] Content-Type: text/html
+[Mon Jun 24 21:33:30.818895 2019] [wsgi:error] [pid 3461] [client 10.42.0.1:33752] ()
+[Mon Jun 24 21:35:09.850967 2019] [wsgi:error] [pid 3539] [client 10.42.0.1:33758] Content-Type: text/html
+[Mon Jun 24 21:35:09.851213 2019] [wsgi:error] [pid 3539] [client 10.42.0.1:33758] ()
+[Mon Jun 24 21:35:15.392366 2019] [wsgi:error] [pid 3539] [client 10.42.0.1:33758] Content-Type: text/html
+[Mon Jun 24 21:35:15.392658 2019] [wsgi:error] [pid 3539] [client 10.42.0.1:33758] ()
+[Mon Jun 24 21:38:04.097219 2019] [wsgi:error] [pid 3602] [client 10.42.0.1:33770] mod_wsgi (pid=3602): Target WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py' cannot be loaded as Python module.
+[Mon Jun 24 21:38:04.097815 2019] [wsgi:error] [pid 3602] [client 10.42.0.1:33770] mod_wsgi (pid=3602): Exception occurred processing WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 21:38:04.098128 2019] [wsgi:error] [pid 3602] [client 10.42.0.1:33770] Traceback (most recent call last):
+[Mon Jun 24 21:38:04.098379 2019] [wsgi:error] [pid 3602] [client 10.42.0.1:33770]   File "/var/www/lampctrlsv/pythonctrl/controller.py", line 5, in <module>
+[Mon Jun 24 21:38:04.099143 2019] [wsgi:error] [pid 3602] [client 10.42.0.1:33770]     from modules import lamp as l
+[Mon Jun 24 21:38:04.099450 2019] [wsgi:error] [pid 3602] [client 10.42.0.1:33770]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 30, in <module>
+[Mon Jun 24 21:38:04.099955 2019] [wsgi:error] [pid 3602] [client 10.42.0.1:33770]     print(status())
+[Mon Jun 24 21:38:04.100162 2019] [wsgi:error] [pid 3602] [client 10.42.0.1:33770] TypeError: status() takes exactly 1 argument (0 given)
+[Mon Jun 24 21:38:26.456291 2019] [wsgi:error] [pid 3638] [client 10.42.0.1:33772] mod_wsgi (pid=3638): Target WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py' cannot be loaded as Python module.
+[Mon Jun 24 21:38:26.456813 2019] [wsgi:error] [pid 3638] [client 10.42.0.1:33772] mod_wsgi (pid=3638): Exception occurred processing WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 21:38:26.457034 2019] [wsgi:error] [pid 3638] [client 10.42.0.1:33772] Traceback (most recent call last):
+[Mon Jun 24 21:38:26.457233 2019] [wsgi:error] [pid 3638] [client 10.42.0.1:33772]   File "/var/www/lampctrlsv/pythonctrl/controller.py", line 5, in <module>
+[Mon Jun 24 21:38:26.457805 2019] [wsgi:error] [pid 3638] [client 10.42.0.1:33772]     from modules import lamp as l
+[Mon Jun 24 21:38:26.457955 2019] [wsgi:error] [pid 3638] [client 10.42.0.1:33772]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 30, in <module>
+[Mon Jun 24 21:38:26.458377 2019] [wsgi:error] [pid 3638] [client 10.42.0.1:33772]     print(status())
+[Mon Jun 24 21:38:26.458568 2019] [wsgi:error] [pid 3638] [client 10.42.0.1:33772] TypeError: status() takes exactly 1 argument (0 given)
+[Mon Jun 24 21:38:28.177469 2019] [wsgi:error] [pid 3634] [client 10.42.0.1:33774] mod_wsgi (pid=3634): Target WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py' cannot be loaded as Python module.
+[Mon Jun 24 21:38:28.177985 2019] [wsgi:error] [pid 3634] [client 10.42.0.1:33774] mod_wsgi (pid=3634): Exception occurred processing WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 21:38:28.178207 2019] [wsgi:error] [pid 3634] [client 10.42.0.1:33774] Traceback (most recent call last):
+[Mon Jun 24 21:38:28.178412 2019] [wsgi:error] [pid 3634] [client 10.42.0.1:33774]   File "/var/www/lampctrlsv/pythonctrl/controller.py", line 5, in <module>
+[Mon Jun 24 21:38:28.178987 2019] [wsgi:error] [pid 3634] [client 10.42.0.1:33774]     from modules import lamp as l
+[Mon Jun 24 21:38:28.179129 2019] [wsgi:error] [pid 3634] [client 10.42.0.1:33774]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 30, in <module>
+[Mon Jun 24 21:38:28.179686 2019] [wsgi:error] [pid 3634] [client 10.42.0.1:33774]     print(status())
+[Mon Jun 24 21:38:28.179919 2019] [wsgi:error] [pid 3634] [client 10.42.0.1:33774] TypeError: status() takes exactly 1 argument (0 given)
+[Mon Jun 24 21:57:19.367545 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424] mod_wsgi (pid=3954): Target WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py' cannot be loaded as Python module.
+[Mon Jun 24 21:57:19.368097 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424] mod_wsgi (pid=3954): Exception occurred processing WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 21:57:19.368326 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424] Traceback (most recent call last):
+[Mon Jun 24 21:57:19.368540 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424]   File "/var/www/lampctrlsv/pythonctrl/controller.py", line 5, in <module>
+[Mon Jun 24 21:57:19.369115 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424]     from modules import lamp as l
+[Mon Jun 24 21:57:19.370058 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 23
+[Mon Jun 24 21:57:19.370210 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424]     out = "<html>\\n\t<head>\\n\t</head>\\n\\n\t<body>\\n\t\t\t\t<iframe name="hidden_iframe" width="0" height="0" style="border:none"></iframe>\\n\t\t<form method="post" action="out.php" target="hidden_iframe">\\n\t\t\t\\n\t        <input type="submit" name="foo" value="A" />\\n\t\t\t<input type="submit" name="foo" value="B" />\\n\t\t\t<input type="submit" name="foo" value="C" />\\n\t\t\t<input type="submit" name="foo" value="D" />\\n\t\t\t<input type="submit" name="foo" value="E" />\\n\t\t\t<input type="submit" name="foo" value="F" />\\n\t\t\t<input type="submit" name="foo" value="G" />\\n\t\t\t\t</form>\\n\t\t\t\t<?php\t\t$name = $_POST['foo'];\t\t$fp = fopen("formdata.txt", "w");\t\tfwrite($fp, "");\t\t$savestring = $name;\t\tfwrite($fp, $savestring);\t\tfclose($fp);\t\t?>\t\t\t</body></html>"
+[Mon Jun 24 21:57:19.370423 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424]                    \t        \t           \t        \t\t\t\t                          ^
+[Mon Jun 24 21:57:19.370503 2019] [wsgi:error] [pid 3954] [client 10.42.0.1:35424] SyntaxError: invalid syntax
+[Mon Jun 24 22:49:20.663938 2019] [wsgi:error] [pid 4313] [client 10.42.0.1:37858] mod_wsgi (pid=4313, process='', application='lampctrlsv|'): Failed to parse WSGI script file '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 22:49:20.664445 2019] [wsgi:error] [pid 4313] [client 10.42.0.1:37858] mod_wsgi (pid=4313): Exception occurred processing WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 22:49:20.665086 2019] [wsgi:error] [pid 4313] [client 10.42.0.1:37858]   File "/var/www/lampctrlsv/pythonctrl/controller.py", line 19
+[Mon Jun 24 22:49:20.665201 2019] [wsgi:error] [pid 4313] [client 10.42.0.1:37858]     output = ("Se ha modificado el estado de L" + peticion[5])
+[Mon Jun 24 22:49:20.665266 2019] [wsgi:error] [pid 4313] [client 10.42.0.1:37858]                                                              ^
+[Mon Jun 24 22:49:20.665318 2019] [wsgi:error] [pid 4313] [client 10.42.0.1:37858] IndentationError: unindent does not match any outer indentation level
+[Mon Jun 24 22:51:13.381718 2019] [wsgi:error] [pid 4381] [client 10.42.0.1:37860] 000
+[Mon Jun 24 22:51:13.382297 2019] [wsgi:error] [pid 4381] [client 10.42.0.1:37860] 100
+[Mon Jun 24 22:51:16.825741 2019] [wsgi:error] [pid 4381] [client 10.42.0.1:37860] 100
+[Mon Jun 24 22:51:16.826170 2019] [wsgi:error] [pid 4381] [client 10.42.0.1:37860] 110
+[Mon Jun 24 22:51:19.042142 2019] [wsgi:error] [pid 4381] [client 10.42.0.1:37860] 110
+[Mon Jun 24 22:51:19.042617 2019] [wsgi:error] [pid 4381] [client 10.42.0.1:37860] 010
+[Mon Jun 24 22:51:47.961056 2019] [wsgi:error] [pid 4383] [client 10.42.0.1:37862] 010
+[Mon Jun 24 22:51:47.961676 2019] [wsgi:error] [pid 4383] [client 10.42.0.1:37862] 110
+[Mon Jun 24 22:51:50.128523 2019] [wsgi:error] [pid 4383] [client 10.42.0.1:37862] 110
+[Mon Jun 24 22:51:50.128955 2019] [wsgi:error] [pid 4383] [client 10.42.0.1:37862] 010
+[Mon Jun 24 23:14:35.128372 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040] 0000\x84\xfa\xe1v
+[Mon Jun 24 23:14:35.130977 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040] 1000\x84\xfa\xe1v
+[Mon Jun 24 23:14:35.898196 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040] mod_wsgi (pid=4382): Exception occurred processing WSGI script '/var/www/lampctrlsv/pythonctrl/controller.py'.
+[Mon Jun 24 23:14:35.898545 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040] Traceback (most recent call last):
+[Mon Jun 24 23:14:35.898788 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040]   File "/var/www/lampctrlsv/pythonctrl/controller.py", line 14, in application
+[Mon Jun 24 23:14:35.899598 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040]     l.modstatus(0)
+[Mon Jun 24 23:14:35.899831 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040]   File "/var/www/lampctrlsv/pythonctrl/modules/lamp.py", line 44, in modstatus
+[Mon Jun 24 23:14:35.900437 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040]     f.close()
+[Mon Jun 24 23:14:35.900714 2019] [wsgi:error] [pid 4382] [client 10.42.0.1:38040] IOError: [Errno 14] Bad address
