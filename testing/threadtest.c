@@ -3,7 +3,6 @@
 #include <linux/gpio.h>
 #include <linux/delay.h>
 #include <linux/kthread.h>
-
 #include <linux/moduleparam.h>
 
 MODULE_LICENSE("GPL");
@@ -18,6 +17,8 @@ int frequency = 10000;		// Frequency in Hz...
 int enable    = 1;			// 0 = disable, 1 = enable 
 int tusec_On  = 0;			// duty-cycle HIGH time suring one period in [usec]
 int tusec_Off = 0;			// duty-cycle LOW time during one period in [usec]
+
+int status = 1;
 
 module_param(duty, int, 0644);
 module_param(frequency, int, 0644);
@@ -73,14 +74,15 @@ struct task_struct *task;
 int pwm_thread(void *data)
 {
 
-	while(1)
-	{
-		/* Calculate from frequency and dutycycle the delay-times */
+	while(1){
+	/* Calculate from frequency and dutycycle the delay-times */
 		printk("Funcionando\n");
-		printk("%d : %d : %d \n " , duty , frequency , enable);
-		//tusec_On  = (1000000*duty)/(frequency*100);			// Duration of on-cycle
-		//tusec_Off = (1000000*(100-duty))/(frequency*100);	// Duration of off-cycle
-		usleep(10000);
+		tusec_On  = (1000000*duty)/(frequency*100);			// Duration of on-cycle
+		tusec_Off = (1000000*(100-duty))/(frequency*100);	// Duration of off-cycle
+		printk("%d : %d " ,tusec_On , tusec_Off);
+		msleep(100);
+		gpio_set_value(pwm1 , status);
+		status = !status;
 		if (kthread_should_stop()) break;
 	}
 	return 0;
