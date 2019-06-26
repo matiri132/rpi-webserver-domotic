@@ -1,0 +1,1 @@
+cmd_/home/pi/kmodules/pwmlamp/pwmlamp.ko := ld -r  -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /home/pi/kmodules/pwmlamp/pwmlamp.ko /home/pi/kmodules/pwmlamp/pwmlamp.o /home/pi/kmodules/pwmlamp/pwmlamp.mod.o ;  true

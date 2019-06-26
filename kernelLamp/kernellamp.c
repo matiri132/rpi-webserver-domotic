@@ -8,6 +8,7 @@
 #include <asm/uaccess.h>
 #include <linux/uaccess.h>
 #include <linux/gpio.h>
+#include <linux/moduleparam.h>
 
 MODULE_LICENSE("GPL");
 
@@ -23,6 +24,8 @@ static int lamps[] = {A1 , A2 , A3 , A4};
 static int read_p;
 static int counter = 0;
 static int LAMPNUM = 4;
+static int enable = 1;
+module_param(enable , int , 0644);
 
 //PROC
 static int proc_open(struct inode *sp_inode, struct file *file) {
