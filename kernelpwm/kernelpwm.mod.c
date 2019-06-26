@@ -30,15 +30,15 @@ __attribute__((section("__versions"))) = {
 	{ 0xd0053a2e, "kthread_stop" },
 	{ 0xf08d7414, "wake_up_process" },
 	{ 0x748163a6, "kthread_create_on_node" },
-	{ 0x12a38747, "usleep_range" },
-	{ 0xe27518da, "gpiod_set_raw_value" },
 	{ 0xfe990052, "gpio_free" },
 	{ 0x127f5033, "gpiod_direction_output_raw" },
-	{ 0x2a941df5, "gpio_to_desc" },
 	{ 0x47229b5c, "gpio_request" },
-	{ 0x7c32d0f0, "printk" },
 	{ 0x2e5810c6, "__aeabi_unwind_cpp_pr1" },
 	{ 0xb3f7646e, "kthread_should_stop" },
+	{ 0x12a38747, "usleep_range" },
+	{ 0xe27518da, "gpiod_set_raw_value" },
+	{ 0x2a941df5, "gpio_to_desc" },
+	{ 0x7c32d0f0, "printk" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 	{ 0x2196324, "__aeabi_idiv" },
 };
@@ -49,4 +49,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "906FC4CE4265883D96022A5");
+MODULE_INFO(srcversion, "B8D5731687CFCE67C951F14");

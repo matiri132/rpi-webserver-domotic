@@ -1,4 +1,4 @@
-obj-m += threadtest.o
+obj-m += kernelpwm.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
