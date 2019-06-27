@@ -26,7 +26,6 @@ static const struct modversion_info ____versions[]
 __used
 __attribute__((section("__versions"))) = {
 	{ 0x3f584fcd, "module_layout" },
-	{ 0xfd958c00, "param_ops_int" },
 	{ 0xfe990052, "gpio_free" },
 	{ 0xb83c696b, "remove_proc_entry" },
 	{ 0xf0ee5e24, "proc_create" },
@@ -47,4 +46,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "1917C96B1B1811295EA35B3");
+MODULE_INFO(srcversion, "2DA24DA77C630EC2FA376C3");

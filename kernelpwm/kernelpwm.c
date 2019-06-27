@@ -13,7 +13,7 @@ MODULE_LICENSE("GPL");
 
 /* Global PWM parameters */
 int duty      = 50;			// Dutycycle in %
-int frequency = 10000;		// Frequency in Hz...
+int frequency = 1000;		// Frequency in Hz...
 int enable    = 1;			// 0 = disable, 1 = enable 
 int tusec_On  = 0;			// duty-cycle HIGH time suring one period in [usec]
 int tusec_Off = 0;			// duty-cycle LOW time during one period in [usec]
@@ -55,7 +55,7 @@ int pwm_thread(void *data){
 	printk("PWM: Hilo control PWM incia...");
 	while(!kthread_should_stop()){
 
-		tusec_On  = (1000000*duty)/(frequency*100);			// Duration of on-cycle
+		tusec_On  = (1000000*(duty))/(frequency*100);			// Duration of on-cycle
 		tusec_Off = (1000000*(100-duty))/(frequency*100);	// Duration of off-cycle
                 gpio_set_value(pwm1, 1);
                 usleep_range(tusec_On, tusec_On);
