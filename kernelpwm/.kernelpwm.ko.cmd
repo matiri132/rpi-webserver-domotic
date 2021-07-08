@@ -1,1 +1,0 @@
-cmd_/home/pi/kmodules/kernelpwm/kernelpwm.ko := ld -r  -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /home/pi/kmodules/kernelpwm/kernelpwm.ko /home/pi/kmodules/kernelpwm/kernelpwm.o /home/pi/kmodules/kernelpwm/kernelpwm.mod.o ;  true
