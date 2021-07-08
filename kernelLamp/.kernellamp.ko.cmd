@@ -1,1 +1,0 @@
-cmd_/home/pi/kmodules/kernelLamp/kernellamp.ko := ld -r  -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /home/pi/kmodules/kernelLamp/kernellamp.ko /home/pi/kmodules/kernelLamp/kernellamp.o /home/pi/kmodules/kernelLamp/kernellamp.mod.o ;  true
